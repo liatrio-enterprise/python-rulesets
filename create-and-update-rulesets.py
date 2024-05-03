@@ -5,7 +5,7 @@ import os
 # Define the base URL for the GitHub API
 token = os.environ.get("GITHUB_TOKEN")
 base_url = "https://api.github.com"
-ORG = "liatrio-enterprise"
+ORG = "liatrio-clients"
 
 # Define the headers for the API request
 headers = {
@@ -76,11 +76,29 @@ def get_rulesets(org):
         return None
 
 def main():
+  deleteFlag = False
   # Try to create a new ruleset
   create_response = requests.post(f"{base_url}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(data))
   print(create_response.json())
 
-  if create_response.status_code == 200:
+  # Check Delete Variable
+  if os.environ.get("DELETE_FLAG") == "True":
+    deleteFlag = True
+
+  if deleteFlag == True:
+    print("Deleting Ruleset")
+    ruleset_dict = get_rulesets(ORG)
+    if ruleset_dict is not None:
+        RULESET_ID = ruleset_dict.get(data['name'])
+        if RULESET_ID is not None:
+            delete_response = requests.delete(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers)
+            if delete_response.status_code == 204:
+                print("Ruleset deleted successfully")
+            else:
+                print(f"Failed to delete ruleset: {delete_response.json()}")
+        else:
+            print("Ruleset not found")
+  elif create_response.status_code == 200:
       print("Ruleset created successfully")
   elif create_response.status_code == 422 and 'Name must be unique' in str(create_response.json()):
       print("Ruleset already exists, updating...")
