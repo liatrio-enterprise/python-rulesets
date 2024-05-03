@@ -1,0 +1,45 @@
+name: Run create-and-update-rulesets
+
+on:
+  workflow_dispatch:
+    inputs:
+      org:
+        description: 'The organization name'
+        required: false
+        default: 'liatrio-enterprise'
+      ruleset_name:
+        description: 'The ruleset name'
+        required: true
+      target:
+        description: 'The target of the ruleset [tag, branch]'
+        required: false
+        default: 'branch'
+      enforcement:
+        description: 'The enforcement level of the ruleset [disabled, active, evaluate]'
+        required: false
+        default: 'evaluate'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Run create-and-update-rulesets
+      run: python create-and-update-rulesets.py
+      env:
+        ORG: your-org
+        RULESET_NAME: your-ruleset-name
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

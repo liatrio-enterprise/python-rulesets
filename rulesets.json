@@ -1,0 +1,50 @@
+[
+  {
+    "org": "liatrio-enterprise",
+    "name": "Python Ruleset",
+    "target": "branch",
+    "enforcement": "active",
+    "conditions": {
+        "ref_name": {
+            "include": ["~DEFAULT_BRANCH"],
+            "exclude": []
+        },
+        "repository_property": {
+            "include": [
+                {
+                    "name": "Ownership",
+                    "property_values": ["github_practice"]
+                },
+                {
+                    "name": "RepositoryType",
+                    "property_values": ["automation"]
+                }
+            ],
+            "exclude": []
+        }
+    },
+    "rules": [
+        {
+            "type": "required_status_checks",
+            "parameters": {
+                "strict_required_status_checks_policy": False,
+                "required_status_checks": [
+                    {
+                        "context": "CodeQL"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "pull_request",
+            "parameters": {
+                "dismiss_stale_reviews_on_push": False,
+                "require_code_owner_review": False,
+                "require_last_push_approval": True,
+                "required_approving_review_count": 1,
+                "required_review_thread_resolution": True
+            }
+        }
+    ]
+  }
+]
