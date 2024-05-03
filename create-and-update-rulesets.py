@@ -82,7 +82,7 @@ def main():
   print(create_response.json())
 
   # Check Delete Variable
-  if os.environ.get("DELETE_FLAG") == "True":
+  if os.environ.get("DELETE_FLAG") == "True": # Assign environment variable DELETE_FLAG to delete ruleset
     deleteFlag = True
 
   if deleteFlag == True:
