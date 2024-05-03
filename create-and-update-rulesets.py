@@ -87,7 +87,7 @@ def main():
       # If the ruleset already exists, update it
       ruleset_dict = get_rulesets(ORG)
       if ruleset_dict is not None:
-          RULESET_ID = ruleset_dict.get(data['name'])  # replace 'your_ruleset_name' with the actual ruleset name
+          RULESET_ID = ruleset_dict.get(data['name'])
           if RULESET_ID is not None:
               update_response = requests.put(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers, data=json.dumps(data))
               if update_response.status_code == 200:
@@ -98,41 +98,6 @@ def main():
               print("Ruleset not found")
   else:
       print(f"An error occurred: {create_response.json()}")
-  
-  # ruleset_dict = get_rulesets(ORG)
-  
-  # create_response = requests.post(f"{base_url}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(data))
-
-  # update_repsonse = requests.post(f"{base_url}/orgs/{ORG}/rulesets/RULESET_ID", headers=headers, data=json.dumps(data))
-
-  # try:
-  #   # Try to create a new ruleset
-  #   create_response = requests.post(f"{base_url}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(data))
-  #   # create_response.raise_for_status()  # Raises a HTTPError if the response status is 4xx, 5xx
-  #   print(create_response.json())
-  # except requests.exceptions.HTTPError as err:
-  #     if 'Name must be unique' in str(create_response.json()):  # replace this with the actual error message when a ruleset already exists
-  #         print("Does it get here")
-  #         # If the ruleset already exists, update it
-  #         ruleset_dict = get_rulesets(ORG, base_url, headers)
-  #         if ruleset_dict is not None:
-  #             RULESET_ID = ruleset_dict.get('your_ruleset_name')  # replace 'your_ruleset_name' with the actual ruleset name
-  #             if RULESET_ID is not None:
-  #                 update_response = requests.patch(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers, data=json.dumps(data))
-  #                 print("Ruleset updated successfully")
-  #             else:
-  #                 print("Ruleset not found")
-  #     else:
-  #         print(f"An error occurred: {err}")
-
-  # print(response.json())
-
-  # # Check if the request was successful
-  # if response.status_code == 201:
-  #     print("Ruleset created successfully")
-  # else:
-  #     print(f"Request failed with status code {response.status_code}")
-
 
 if __name__ == "__main__":
     main()
