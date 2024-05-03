@@ -5,7 +5,7 @@ import os
 # Define the base URL for the GitHub API
 token = os.environ.get("GITHUB_TOKEN")
 base_url = "https://api.github.com"
-ORG = "liatrio-clients"
+ORG = "liatrio-clients" #CHANGE THIS VARIABLE TO YOUR ORG NAME
 
 # Define the headers for the API request
 headers = {
