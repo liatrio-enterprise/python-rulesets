@@ -1,11 +1,12 @@
 import requests
 import json
 import os
+import sys
 
 # Define the base URL for the GitHub API
 token = os.environ.get("GITHUB_TOKEN")
 base_url = "https://api.github.com"
-ORG = "liatrio-clients" #CHANGE THIS VARIABLE TO YOUR ORG NAME
+ORG = "liatrio-enterprise" #CHANGE THIS VARIABLE TO YOUR ORG NAME
 
 # Define the headers for the API request
 headers = {
@@ -77,9 +78,6 @@ def get_rulesets(org):
 
 def main():
   deleteFlag = False
-  # Try to create a new ruleset
-  create_response = requests.post(f"{base_url}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(data))
-  print(create_response.json())
 
   # Check Delete Variable
   if os.environ.get("DELETE_FLAG") == "True": # Assign environment variable DELETE_FLAG to delete ruleset
@@ -94,11 +92,18 @@ def main():
             delete_response = requests.delete(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers)
             if delete_response.status_code == 204:
                 print("Ruleset deleted successfully")
+                sys.exit(0)
             else:
                 print(f"Failed to delete ruleset: {delete_response.json()}")
+                sys.exit(1)
         else:
             print("Ruleset not found")
-  elif create_response.status_code == 200:
+            sys.exit(1)
+
+  # Try to create a new ruleset
+  create_response = requests.post(f"{base_url}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(data))
+  print(create_response.json())
+  if create_response.status_code == 200:
       print("Ruleset created successfully")
   elif create_response.status_code == 422 and 'Name must be unique' in str(create_response.json()):
       print("Ruleset already exists, updating...")
