@@ -1,11 +1,15 @@
 import requests
 import json
 import os
+import logging
+
+# Set up logging
+logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 # Define the base URL for the GitHub API
 token = os.environ.get("GITHUB_TOKEN")
 base_url = "https://api.github.com"
-ORG = "liatrio-clients" #CHANGE THIS VARIABLE TO YOUR ORG NAME
+ORG = "liatrio-enterprise" #CHANGE THIS VARIABLE TO YOUR ORG NAME
 
 # Define the headers for the API request
 headers = {
@@ -14,12 +18,16 @@ headers = {
     "X-GitHub-Api-Version": "2022-11-28"
 }
 
+with open('bypass_actors.json', 'r') as f:
+    bypass_actors = json.load(f)
+
 # Define the data for the ruleset
 data = {
     "org": ORG,
     "name": "Python Ruleset",
     "target": "branch",
     "enforcement": "active",
+    "bypass_actors": bypass_actors,
     "conditions": {
         "ref_name": {
             "include": ["~DEFAULT_BRANCH"],
@@ -64,7 +72,7 @@ data = {
     ],
 }
 
-def get_rulesets(org):
+def get_rulesets(ORG):
     response = requests.get(f"{base_url}/orgs/{ORG}/rulesets", headers=headers)
     if response.status_code == 200:
         rulesets = response.json()
@@ -74,6 +82,20 @@ def get_rulesets(org):
     else:
         print(f"Request failed with status code {response.status_code}")
         return None
+    
+def delete_ruleset(ORG, ruleset_name):
+  print("Deleting Ruleset")
+  ruleset_dict = get_rulesets(ORG)
+  if ruleset_dict is not None:
+      RULESET_ID = ruleset_dict.get(data['name'])
+      if RULESET_ID is not None:
+          delete_response = requests.delete(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers)
+          if delete_response.status_code == 204:
+              print("Ruleset deleted successfully")
+          else:
+              print(f"Failed to delete ruleset: {delete_response.json()}")
+      else:
+          print("Ruleset not found")
 
 def main():
   deleteFlag = False
