@@ -18,60 +18,12 @@ headers = {
     "X-GitHub-Api-Version": "2022-11-28"
 }
 
-with open('bypass_actors.json', 'r') as f:
-    bypass_actors = json.load(f)
+# Define the data for the new ruleset
+with open('rulesets.json', 'r') as f:
+    rulesets = json.load(f)
+    print(rulesets)
 
-# Define the data for the ruleset
-data = {
-    "org": ORG,
-    "name": "Python Ruleset",
-    "target": "branch",
-    "enforcement": "active",
-    "bypass_actors": bypass_actors,
-    "conditions": {
-        "ref_name": {
-            "include": ["~DEFAULT_BRANCH"],
-            "exclude": []
-        },
-        "repository_property": {
-            "include": [
-                {
-                    "name": "Ownership",
-                    "property_values": ["github_practice"]
-                },
-                {
-                    "name": "RepositoryType",
-                    "property_values": ["automation"]
-                }
-            ],
-            "exclude": []
-        },
-    },
-    "rules": [
-        {
-            "type": "required_status_checks",
-            "parameters": {
-                "strict_required_status_checks_policy": False,
-                "required_status_checks": [
-                    {
-                        "context": "CodeQL"
-                    }
-                ]
-            },
-        },
-        {
-            "type": "pull_request",
-            "parameters": {
-                "dismiss_stale_reviews_on_push": False,
-                "require_code_owner_review": False,
-                "require_last_push_approval": True,
-                "required_approving_review_count": 1,
-                "required_review_thread_resolution": True
-            }
-        },
-    ],
-}
-
+# Get rulesets
 def get_rulesets(ORG):
     response = requests.get(f"{base_url}/orgs/{ORG}/rulesets", headers=headers)
     if response.status_code == 200:
@@ -83,61 +35,40 @@ def get_rulesets(ORG):
         print(f"Request failed with status code {response.status_code}")
         return None
     
-def delete_ruleset(ORG, ruleset_name):
-  print("Deleting Ruleset")
-  ruleset_dict = get_rulesets(ORG)
-  if ruleset_dict is not None:
-      RULESET_ID = ruleset_dict.get(data['name'])
-      if RULESET_ID is not None:
-          delete_response = requests.delete(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers)
-          if delete_response.status_code == 204:
-              print("Ruleset deleted successfully")
-          else:
-              print(f"Failed to delete ruleset: {delete_response.json()}")
-      else:
-          print("Ruleset not found")
+# Delete rulesets
+# def delete_ruleset(ORG):
+#   print("Deleting Ruleset")
+#   ruleset_dict = get_rulesets(ORG)
+#   if ruleset_dict is not None:
+#       RULESET_ID = ruleset_dict.get(rulesets['name'])
+#       if RULESET_ID is not None:
+#           delete_response = requests.delete(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers)
+#           if delete_response.status_code == 204:
+#               print("Ruleset deleted successfully")
+#           else:
+#               print(f"Failed to delete ruleset: {delete_response.json()}")
+#       else:
+#           print("Ruleset not found")
 
 def main():
-  deleteFlag = False
-  # Try to create a new ruleset
-  create_response = requests.post(f"{base_url}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(data))
-  print(create_response.json())
-
-  # Check Delete Variable
-  if os.environ.get("DELETE_FLAG") == "True": # Assign environment variable DELETE_FLAG to delete ruleset
-    deleteFlag = True
-
-  if deleteFlag == True:
-    print("Deleting Ruleset")
-    ruleset_dict = get_rulesets(ORG)
-    if ruleset_dict is not None:
-        RULESET_ID = ruleset_dict.get(data['name'])
-        if RULESET_ID is not None:
-            delete_response = requests.delete(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers)
-            if delete_response.status_code == 204:
-                print("Ruleset deleted successfully")
-            else:
-                print(f"Failed to delete ruleset: {delete_response.json()}")
-        else:
-            print("Ruleset not found")
-  elif create_response.status_code == 200:
-      print("Ruleset created successfully")
-  elif create_response.status_code == 422 and 'Name must be unique' in str(create_response.json()):
-      print("Ruleset already exists, updating...")
-      # If the ruleset already exists, update it
-      ruleset_dict = get_rulesets(ORG)
-      if ruleset_dict is not None:
-          RULESET_ID = ruleset_dict.get(data['name'])
-          if RULESET_ID is not None:
-              update_response = requests.put(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers, data=json.dumps(data))
-              if update_response.status_code == 200:
-                  print("Ruleset updated successfully")
-              else:
-                  print(f"Failed to update ruleset: {update_response.json()}")
+  # if os.environ.get("DELETE_RULESET") == "true":
+  #   delete_ruleset(ORG)
+  for ruleset in rulesets:
+      try:
+          # Make the POST request, passing the ruleset as the data
+          create_response = requests.post(f"{base_url}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(ruleset))
+          create_response.raise_for_status()  # Raises a HTTPError if the status code is 4xx or 5xx
+      except requests.exceptions.HTTPError as err:
+          print(f"HTTP error occurred: {err}")
+      except requests.exceptions.RequestException as err:
+          print(f"Other error occurred: {err}")
+      else:
+          print("Response status code:", create_response.status_code)
+          print("Response headers:", create_response.headers)
+          if 'application/json' in create_response.headers.get('Content-Type'):
+              print("Response body:", json.dumps(create_response.json(), indent=4))
           else:
-              print("Ruleset not found")
-  else:
-      print(f"An error occurred: {create_response.json()}")
+              print("Response body:", create_response.text)   
 
 if __name__ == "__main__":
     main()
