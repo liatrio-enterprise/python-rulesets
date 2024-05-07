@@ -6,8 +6,8 @@ import os
 token = os.environ.get("GITHUB_TOKEN")  # Get the token from the environment
 base_url = "https://api.github.com" 
 ORG = "liatrio-enterprise"              # Name of the organization you want to read the ruleset from
-REPO = "all-rules-test"                 # Name of the repository you want to read the ruleset from
-RULESET_NAME = "god mode"         # CHANGE THIS to match the ruleset you created or want to read
+REPO = "python-rulesets"                 # Name of the repository you want to read the ruleset from
+RULESET_NAME = "Repo Level Ruleset"         # CHANGE THIS to match the ruleset you created or want to read
 
 headers = {
     "Accept": "application/vnd.github+json",
