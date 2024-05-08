@@ -27,5 +27,6 @@ jobs:
 
     - name: Run script
       env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         TEAM_NAME: ${{ inputs.team_name }}
       run: python create_rulesets.py
