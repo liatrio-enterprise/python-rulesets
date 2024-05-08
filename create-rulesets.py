@@ -10,6 +10,11 @@ logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(level
 token = os.environ.get("GITHUB_TOKEN")
 base_url = "https://api.github.com"
 ORG = "liatrio-enterprise" #CHANGE THIS VARIABLE TO YOUR ORG NAME
+team_name = os.getenv('TEAM_NAME')
+if team_name:
+    file_name = f'teams_rulesets/team_{team_name}.json'
+else:
+    file_name = 'teams_rulesets/base_ruleset.json'
 
 # Define the headers for the API request
 headers = {
@@ -19,7 +24,7 @@ headers = {
 }
 
 # Define the data for the new ruleset
-with open('rulesets.json', 'r') as f:
+with open(file_name, 'r') as f:
     rulesets = json.load(f)
     print(rulesets)
 
