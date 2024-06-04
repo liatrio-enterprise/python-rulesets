@@ -1,0 +1,48 @@
+{
+    "id": 856484,
+    "name": "Base Manifest",
+    "target": "branch",
+    "source_type": "Organization",
+    "source": "liatrio-enterprise",
+    "enforcement": "disabled",
+    "conditions": {},
+    "rules": [
+      {
+        "type": "non_fast_forward"
+      },
+      {
+        "type": "pull_request",
+        "parameters": {
+          "required_approving_review_count": 1,
+          "dismiss_stale_reviews_on_push": true,
+          "require_code_owner_review": true,
+          "require_last_push_approval": true,
+          "required_review_thread_resolution": false
+        }
+      },
+      {
+        "type": "code_scanning",
+        "parameters": {
+          "code_scanning_tools": [
+            {
+              "tool": "CodeQL",
+              "security_alerts_threshold": "high_or_higher",
+              "alerts_threshold": "errors"
+            }
+          ]
+        }
+      },
+      {
+        "type": "required_linear_history"
+      }
+    ],
+    "bypass_actors": [],
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/orgs/liatrio-enterprise/rulesets/856484"
+      },
+      "html": {
+        "href": "https://github.com/organizations/liatrio-enterprise/settings/rules/856484"
+      }
+    }
+  }
