@@ -1,18 +1,7 @@
 # This Script will grab information about a ruleset at the org level
+# This script requires user to run local_dev.py in order to use this script
 
 import requests
-# import os
-
-# token = os.environ.get("GITHUB_TOKEN")  # Get the token from the environment
-# base_url = "https://api.github.com" 
-# ORG = "liatrio-enterprise"              # Name of the organization you want to read the ruleset from
-# RULESET_NAME = "Base Manifest"         # CHANGE THIS to match the ruleset you created or want to read
-
-# headers = {
-#     "Accept": "application/vnd.github+json",
-#     "Authorization": f"Bearer {token}",
-#     "X-GitHub-Api-Version": "2022-11-28",
-# }
 
 def get_rulesets(org, base_url, headers):
     response = requests.get(f"{base_url}/orgs/{org}/rulesets", headers=headers)
@@ -34,6 +23,7 @@ def main(base_url, headers, org, ruleset_name):
     if ruleset_dict is not None:
         ruleset_id = ruleset_dict.get(ruleset_name)
         if ruleset_id is not None:
+            
             # Print Ruleset ID (DEBUGGING)
             # print(f"Ruleset ID: {ruleset_id}")
 
