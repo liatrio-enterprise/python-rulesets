@@ -28,14 +28,7 @@ HEADERS = {
 }
 
 def main():
-    print("Hello from main")
-    print("Here are the environement variables being read")
-    print(TOKEN)
-    print(TYPE)
-    print(ORG)
-    print(REPO)
-    print(RULESET_NAME)
-    print(MANIFEST_FILE_NAME)
+    # print("Hello from main")
     if TYPE == "org":
         # print("I am here checking org ruleset match")
         responseORG = get_ruleset_org.main(BASE_URL, HEADERS, ORG, RULESET_NAME)
