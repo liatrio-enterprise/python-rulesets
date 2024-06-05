@@ -25,7 +25,7 @@ jobs:
     - name: Run script
       run: python compare.py
       env:
-        TOKEN: ${{ secrets.AUTH_TOKEN }}
+        AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
         TYPE: 'org'
         ORG: 'liatrio-enterprise'
         REPO: 'all-rules-test'
