@@ -3,3 +3,4 @@ app.log
 __pycache__/
 compare/
 local_dev_old.py
+.env
