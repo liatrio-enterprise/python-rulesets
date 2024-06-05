@@ -3,6 +3,7 @@ name: Run Python script for manifest enforcement
 on:
   schedule:
     - cron: '*/5 * * * *'
+  workflow_dispatch:
 
 jobs:
   build:
