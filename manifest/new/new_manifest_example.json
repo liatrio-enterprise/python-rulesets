@@ -1,0 +1,50 @@
+[
+    {
+      "org": "liatrio-enterprise",
+      "name": "Base Ruleset Example",
+      "target": "branch",
+      "enforcement": "active",
+      "bypass_actors": [
+        {
+            "actor_id": 1,
+            "actor_type": "OrganizationAdmin",
+            "bypass_mode": "always"
+        }
+      ],
+      "conditions": {
+          "ref_name": {
+              "include": ["~DEFAULT_BRANCH"],
+              "exclude": []
+          },
+          "repository_name": {
+              "include": ["~ALL"],
+              "exclude": []
+          }
+      },
+      "rules": [
+          {
+            "type": "code_scanning",
+            "parameters": {
+                "code_scanning_tools": [
+                    {
+                        "tool": "CodeQL",
+                        "security_alerts_threshold": "high_or_higher",
+                        "alerts_threshold": "errors"
+                    }
+                ]
+            }
+          },
+          {
+              "type": "pull_request",
+              "parameters": {
+                  "dismiss_stale_reviews_on_push": false,
+                  "require_code_owner_review": false,
+                  "require_last_push_approval": true,
+                  "required_approving_review_count": 1,
+                  "required_review_thread_resolution": true
+              }
+          }
+      ]
+    }
+  ]
+  

@@ -1,3 +1,6 @@
+# This script will create a ruleset at the org level only, based on the given parameters
+# Rulset Manifest MUST be wrapped in a list object in json, otherwise this script WILL NOT work
+
 import requests
 import json
 import os
@@ -7,30 +10,32 @@ import logging
 logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 # Define the base URL for the GitHub API
-token = os.environ.get("GITHUB_TOKEN")
-base_url = "https://api.github.com"
-ORG = "liatrio-enterprise" #CHANGE THIS VARIABLE TO YOUR ORG NAME
-team_name = os.getenv('TEAM_NAME')
-if team_name:
-    file_name = f'teams_rulesets/team_{team_name}.json'
-else:
-    file_name = 'teams_rulesets/base_ruleset.json'
+TOKEN = os.environ.get("GITHUB_TOKEN")      # Get the token from the environment
+BASE_URL = "https://api.github.com"         # Base URL for the GitHub API
+ORG = "liatrio-enterprise"                  # CHANGE THIS VARIABLE TO YOUR ORG NAME
+FILE_NAME = "new_manifest_example.json"     # CHANGE THIS VARIABLE TO THE NAME OF YOUR MANIFEST FILE
+FILE_PATH = f"manifest/new/{FILE_NAME}"     # CHANGE THIS VARIABLE TO THE PATH OF YOUR MANIFEST FILE
+# team_name = os.getenv('TEAM_NAME')
+# if team_name:
+#     file_name = f'teams_ruleset/team_{team_name}.json'
+# else:
+#     file_name = 'teams_rulesets/base_ruleset.json'
 
 # Define the headers for the API request
 headers = {
-    "Authorization": f"Bearer {token}",
+    "Authorization": f"Bearer {TOKEN}",
     "Accept": "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28"
 }
 
 # Define the data for the new ruleset
-with open(file_name, 'r') as f:
+with open(FILE_PATH, 'r') as f:
     rulesets = json.load(f)
     print(rulesets)
 
 # Get rulesets
 def get_rulesets(ORG):
-    response = requests.get(f"{base_url}/orgs/{ORG}/rulesets", headers=headers)
+    response = requests.get(f"{BASE_URL}/orgs/{ORG}/rulesets", headers=headers)
     if response.status_code == 200:
         rulesets = response.json()
         ruleset_dict = {ruleset['name']: ruleset['id'] for ruleset in rulesets}
@@ -47,7 +52,7 @@ def get_rulesets(ORG):
 #   if ruleset_dict is not None:
 #       RULESET_ID = ruleset_dict.get(rulesets['name'])
 #       if RULESET_ID is not None:
-#           delete_response = requests.delete(f"{base_url}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers)
+#           delete_response = requests.delete(f"{BASE_URL}/orgs/{ORG}/rulesets/{RULESET_ID}", headers=headers)
 #           if delete_response.status_code == 204:
 #               print("Ruleset deleted successfully")
 #           else:
@@ -61,7 +66,7 @@ def main():
   for ruleset in rulesets:
       try:
           # Make the POST request, passing the ruleset as the data
-          create_response = requests.post(f"{base_url}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(ruleset))
+          create_response = requests.post(f"{BASE_URL}/orgs/{ORG}/rulesets", headers=headers, data=json.dumps(ruleset))
           create_response.raise_for_status()  # Raises a HTTPError if the status code is 4xx or 5xx
       except requests.exceptions.HTTPError as err:
           print(f"HTTP error occurred: {err}")

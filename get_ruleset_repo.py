@@ -1,19 +1,7 @@
 # This Script will grab information about a ruleset at the repo level
+# This script requires user to run local_dev.py in order to use this script
 
 import requests
-# import os
-
-# TOKEN = os.environ.get("GITHUB_TOKEN")  # Get the token from the environment
-# BASE_URL = "https://api.github.com" 
-# ORG = "liatrio-enterprise"              # Name of the organization you want to read the ruleset from
-# REPO = "all-rules-test"                 # Name of the repository you want to read the ruleset from
-# RULESET_NAME = "god mode"         # CHANGE THIS to match the ruleset you created or want to read
-
-# HEADERS = {
-#     "Accept": "application/vnd.github+json",
-#     "Authorization": f"Bearer {token}",
-#     "X-GitHub-Api-Version": "2022-11-28",
-# }
 
 def get_rulesets(org, repo, base_url, headers):
     response = requests.get(f"{base_url}/repos/{org}/{repo}/rulesets", headers=headers)
