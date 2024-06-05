@@ -53,7 +53,7 @@ To run the script, install the requirements from `requirements.txt` files and ru
 
 There are example manifest files located in the `examples` folder under the `manifests` folder. Use these as a guide to create new custom manifests.
 
-You can alos reference the [REST API Documentation](https://docs.github.com/en/rest?apiVersion=2022-11-28) to get a better understading of what options there are.
+You can also reference the [REST API Documentation](https://docs.github.com/en/rest?apiVersion=2022-11-28) to get a better understading of what options there are.
 
 ### Gathering and Updating Manifest (Local)
 
