@@ -80,3 +80,9 @@ The remaining scripts:
 
 These files are used by `local_dev.py` to gather data about the ruleset that you are trying to grab or update. Functions in these files use arguments provided
 by the `local_dev.py` script.
+
+### Creating new rulesets
+
+For an example JSON manifest for creating a new ruleset, take a look at `./manifest/example_json/base_ruleset_example.json`. Keep in mind that each ruleset should be stored as a list as this is what our request expects. 
+
+This repository also has the `local_dev.py` script that should be run locally and be able to grab the JSON configuration for an existing ruleset to help you understand how to structure these rules.

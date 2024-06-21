@@ -13,8 +13,8 @@ logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(level
 TOKEN = os.environ.get("GITHUB_TOKEN")      # Get the token from the environment
 BASE_URL = "https://api.github.com"         # Base URL for the GitHub API
 ORG = "liatrio-enterprise"                  # CHANGE THIS VARIABLE TO YOUR ORG NAME
-FILE_NAME = "new_manifest_example.json"     # CHANGE THIS VARIABLE TO THE NAME OF YOUR MANIFEST FILE
-FILE_PATH = f"manifest/new/{FILE_NAME}"     # CHANGE THIS VARIABLE TO THE PATH OF YOUR MANIFEST FILE
+FILE_NAME = "base_ruleset_example.json"     # CHANGE THIS VARIABLE TO THE NAME OF YOUR MANIFEST FILE
+FILE_PATH = f"manifest/example_json/{FILE_NAME}"     # CHANGE THIS VARIABLE TO THE PATH OF YOUR MANIFEST FILE
 # team_name = os.getenv('TEAM_NAME')
 # if team_name:
 #     file_name = f'teams_ruleset/team_{team_name}.json'
@@ -34,16 +34,16 @@ with open(FILE_PATH, 'r') as f:
     print(rulesets)
 
 # Get rulesets
-def get_rulesets(ORG):
-    response = requests.get(f"{BASE_URL}/orgs/{ORG}/rulesets", headers=headers)
-    if response.status_code == 200:
-        rulesets = response.json()
-        ruleset_dict = {ruleset['name']: ruleset['id'] for ruleset in rulesets}
-        print(ruleset_dict)
-        return ruleset_dict
-    else:
-        print(f"Request failed with status code {response.status_code}")
-        return None
+# def get_rulesets(ORG):
+#     response = requests.get(f"{BASE_URL}/orgs/{ORG}/rulesets", headers=headers)
+#     if response.status_code == 200:
+#         rulesets = response.json()
+#         ruleset_dict = {ruleset['name']: ruleset['id'] for ruleset in rulesets}
+#         print(ruleset_dict)
+#         return ruleset_dict
+#     else:
+#         print(f"Request failed with status code {response.status_code}")
+#         return None
     
 # Delete rulesets
 # def delete_ruleset(ORG):
